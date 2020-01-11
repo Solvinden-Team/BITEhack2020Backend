@@ -3,18 +3,18 @@ package org.solvinden.bitehack2020.backend.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="PeopleInRooms")
+@Table(name="people_in_rooms")
 public class PeopleInRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    long id;
+    public long id;
 
     @Column(nullable = false)
-    long timestamp;
+    public long timestamp;
 
     @ManyToOne
-    Room room;
+    public Room room;
 
     @Column(nullable = false)
-    int peopleCount;
+    public int peopleCount;
 }
