@@ -1,4 +1,4 @@
-package org.solvinden.bitehack2020.backend.message;
+package org.solvinden.bitehack2020.backend.dto;
 
 public class PeopleCountMessage {
     private Long timestamp;
