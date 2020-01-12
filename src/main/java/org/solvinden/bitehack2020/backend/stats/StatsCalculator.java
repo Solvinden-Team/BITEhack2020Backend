@@ -76,6 +76,7 @@ public class StatsCalculator {
         List<Double> nextPeopleMean = nextPeriods.stream().map(i -> periodAverage.get(periods.get(i))).collect(Collectors.toList());
         int dp = currentPeople - nextPeopleMean.get(0).intValue();
         List<Integer> nextPeople = nextPeopleMean.stream().map(x -> x.intValue() + dp).collect(Collectors.toList());
+        nextPeople.remove(0);
         return new RoomStats(RoomLoad.fromInt(dp), nextPeople);
     }
 
