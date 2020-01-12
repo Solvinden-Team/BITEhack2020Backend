@@ -12,4 +12,7 @@ import java.util.List;
 public interface PeopleInRoomRepository extends JpaRepository<PeopleInRoom, Integer> {
     @Query("SELECT p FROM PeopleInRoom p WHERE p.room.roomId = ?1 ORDER BY p.timestamp DESC")
     List<PeopleInRoom> getLatestForRoom(int roomId, Pageable pageable);
+
+    @Query("SELECT p FROM PeopleInRoom p WHERE p.room.roomId = ?1 ORDER BY p.timestamp DESC")
+    List<PeopleInRoom> getAllByRoomId(int roomId);
 }

@@ -2,10 +2,12 @@ package org.solvinden.bitehack2020.backend.controller;
 
 
 import org.solvinden.bitehack2020.backend.dto.RoomInfo;
+import org.solvinden.bitehack2020.backend.dto.RoomStats;
 import org.solvinden.bitehack2020.backend.exception.RoomIdDoesntExistException;
 import org.solvinden.bitehack2020.backend.model.PeopleInRoom;
 import org.solvinden.bitehack2020.backend.model.Room;
 import org.solvinden.bitehack2020.backend.repository.PeopleInRoomRepository;
+import org.solvinden.bitehack2020.backend.stats.StatsCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -45,13 +47,27 @@ public class RoomsController {
 
     @RequestMapping(path = "/{roomId}", method = RequestMethod.GET)
     public RoomInfo getRoomInfo(@PathVariable("roomId") int roomId) {
-        List<PeopleInRoom> potentialPeopleInRoom = peopleInRoomRepository.getLatestForRoom(roomId, PageRequest.of(0, 1));
-        PeopleInRoom peopleInRoom = potentialPeopleInRoom.size() > 0 ? potentialPeopleInRoom.get(0) : null;
+        PeopleInRoom peopleInRoom = getPeopleInRoom(roomId);
         if (peopleInRoom == null){
             throw new RoomIdDoesntExistException(roomId);
         }
-
         return packIntoRoomInfo(peopleInRoom);
+    }
+
+    @RequestMapping(path = "/{roomId}/stats", method = RequestMethod.GET)
+    public RoomStats getRoomStats(@PathVariable("roomId") int roomId) {
+        StatsCalculator calculator = new StatsCalculator(peopleInRoomRepository);
+        PeopleInRoom peopleInRoom = getPeopleInRoom(roomId);
+        if(peopleInRoom == null) {
+            throw new RoomIdDoesntExistException(roomId);
+        }
+        return calculator.calculate(roomId);
+    }
+
+    private PeopleInRoom getPeopleInRoom(int roomId) {
+        List<PeopleInRoom> potentialPeopleInRoom = peopleInRoomRepository.getLatestForRoom(roomId, PageRequest.of(0, 1));
+        PeopleInRoom peopleInRoom = potentialPeopleInRoom.size() > 0 ? potentialPeopleInRoom.get(0) : null;
+        return peopleInRoom;
     }
 
     private RoomInfo packIntoRoomInfo(PeopleInRoom peopleInRoom){
