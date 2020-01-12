@@ -6,7 +6,8 @@ The back-end component of the Coffree system. Exchanges information with databas
 
 * `/room/` **GET** - get basic, up-to-date information about all rooms
 * `/room/{roomId}` **GET** - get information about a `roomId` room
-* `/count/{roomId}` **POST** - add information about current amount of people in a particular room 
+* `/count/{roomId}` **POST** - add information about current amount of people in a particular room
+* `/tags` **GET** - get a list of all possible room tags 
 
 ## Running
 
