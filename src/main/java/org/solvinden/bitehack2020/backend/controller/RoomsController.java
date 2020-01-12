@@ -7,6 +7,7 @@ import org.solvinden.bitehack2020.backend.model.PeopleInRoom;
 import org.solvinden.bitehack2020.backend.model.Room;
 import org.solvinden.bitehack2020.backend.repository.PeopleInRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -43,9 +44,9 @@ public class RoomsController {
     }
 
     @RequestMapping(path = "/{roomId}", method = RequestMethod.GET)
-    public RoomInfo getRoomInfo(@PathVariable("roomId") int roomId){
-        PeopleInRoom peopleInRoom = peopleInRoomRepository.getLatestForRoom(roomId);
-
+    public RoomInfo getRoomInfo(@PathVariable("roomId") int roomId) {
+        List<PeopleInRoom> potentialPeopleInRoom = peopleInRoomRepository.getLatestForRoom(roomId, PageRequest.of(0, 1));
+        PeopleInRoom peopleInRoom = potentialPeopleInRoom.size() > 0 ? potentialPeopleInRoom.get(0) : null;
         if (peopleInRoom == null){
             throw new RoomIdDoesntExistException(roomId);
         }
@@ -58,6 +59,7 @@ public class RoomsController {
                 peopleInRoom.room.name,
                 peopleInRoom.room.description,
                 peopleInRoom.timestamp,
-                peopleInRoom.peopleCount);
+                peopleInRoom.peopleCount,
+                peopleInRoom.room.tags.stream().map(tag -> tag.name).collect(Collectors.toList()));
     }
 }
