@@ -1,19 +1,11 @@
 package org.solvinden.bitehack2020.backend.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="rooms")
 public class Room {
-
-    public Room() {
-
-    }
-
-    public Room(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,4 +14,9 @@ public class Room {
     @Column(unique = true, nullable = false)
     public String name;
     public String description;
+
+    @ManyToMany
+    @JoinTable(name = "room_tags", joinColumns = { @JoinColumn(name = "room_id") },
+               inverseJoinColumns = { @JoinColumn(name = "tag_id") })
+    public List<Tag> tags;
 }
